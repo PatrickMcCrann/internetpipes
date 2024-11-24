@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Internet Pipes Events Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/recharts/2.12.0/Recharts.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.5/babel.min.js"></script>
+    <style>
+        body { margin: 0; padding: 0; }
+        #root { width: 100%; height: 100vh; }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const EventsAnalysis = () => {
+            const eventData = [
+                { month: 'Jan 2024', digital: 1, inPerson: 1, digitalParticipants: 447, inPersonParticipants: 31 },
+                { month: 'Feb 2024', digital: 6, inPerson: 4, digitalParticipants: 1406, inPersonParticipants: 65 },
+                { month: 'Mar 2024', digital: 2, inPerson: 2, digitalParticipants: 504, inPersonParticipants: 87 },
+                { month: 'Apr 2024', digital: 2, inPerson: 2, digitalParticipants: 150, inPersonParticipants: 40 },
+                { month: 'May 2024', digital: 2, inPerson: 3, digitalParticipants: 411, inPersonParticipants: 69 },
+                { month: 'Jun 2024', digital: 0, inPerson: 8, digitalParticipants: 0, inPersonParticipants: 200 },
+                { month: 'Jul 2024', digital: 0, inPerson: 6, digitalParticipants: 0, inPersonParticipants: 132 },
+                { month: 'Aug 2024', digital: 0, inPerson: 5, digitalParticipants: 0, inPersonParticipants: 45 },
+                { month: 'Sep 2024', digital: 1, inPerson: 3, digitalParticipants: 110, inPersonParticipants: 21 },
+                { month: 'Oct 2024', digital: 2, inPerson: 5, digitalParticipants: 404, inPersonParticipants: 33 },
+                { month: 'Nov 2024', digital: 4, inPerson: 3, digitalParticipants: 523, inPersonParticipants: 30 },
+                { month: 'Dec 2024', digital: 1, inPerson: 4, digitalParticipants: 79, inPersonParticipants: 27 },
+                { month: 'Jan 2025', digital: 0, inPerson: 4, digitalParticipants: 0, inPersonParticipants: 10 },
+                { month: 'Mar 2025', digital: 0, inPerson: 1, digitalParticipants: 0, inPersonParticipants: 0 }
+            ];
+
+            const totalStats = eventData.reduce((acc, month) => ({
+                digital: acc.digital + month.digital,
+                inPerson: acc.inPerson + month.inPerson,
+                total: acc.total + month.digital + month.inPerson,
+                digitalParticipants: acc.digitalParticipants + month.digitalParticipants,
+                inPersonParticipants: acc.inPersonParticipants + month.inPersonParticipants
+            }), { digital: 0, inPerson: 0, total: 0, digitalParticipants: 0, inPersonParticipants: 0 });
+
+            const { BarChart, Bar, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer } = Recharts;
+
+            return (
+                <div className="w-full h-full bg-white p-4">
+                    <div className="grid grid-cols-5 gap-2 text-sm mb-4">
+                        <div className="p-2 bg-blue-50 rounded">
+                            <div className="font-bold">{totalStats.digital}</div>
+                            <div className="text-gray-600">Digital Events</div>
+                        </div>
+                        <div className="p-2 bg-green-50 rounded">
+                            <div className="font-bold">{totalStats.inPerson}</div>
+                            <div className="text-gray-600">In-Person Events</div>
+                        </div>
+                        <div className="p-2 bg-purple-50 rounded">
+                            <div className="font-bold">{totalStats.total}</div>
+                            <div className="text-gray-600">Total Events</div>
+                        </div>
+                        <div className="p-2 bg-blue-100 rounded">
+                            <div className="font-bold">{totalStats.digitalParticipants}</div>
+                            <div className="text-gray-600">Digital Participants</div>
+                        </div>
+                        <div className="p-2 bg-green-100 rounded">
+                            <div className="font-bold">{totalStats.inPersonParticipants}</div>
+                            <div className="text-gray-600">In-Person Participants</div>
+                        </div>
+                    </div>
+                    
+                    <div className="h-1/2 mb-4">
+                        <ResponsiveContainer width="100%" height="100%">
+                            <BarChart data={eventData}>
+                                <XAxis dataKey="month" angle={-45} textAnchor="end" height={60} />
+                                <YAxis />
+                                <Tooltip />
+                                <Legend />
+                                <Bar dataKey="digital" name="Digital Events" fill="#3b82f6" />
+                                <Bar dataKey="inPerson" name="In-Person Events" fill="#22c55e" />
+                            </BarChart>
+                        </ResponsiveContainer>
+                    </div>
+
+                    <div className="h-1/2">
+                        <ResponsiveContainer width="100%" height="100%">
+                            <BarChart data={eventData}>
+                                <XAxis dataKey="month" angle={-45} textAnchor="end" height={60} />
+                                <YAxis />
+                                <Tooltip />
+                                <Legend />
+                                <Bar dataKey="digitalParticipants" name="Digital Participants" fill="#93c5fd" />
+                                <Bar dataKey="inPersonParticipants" name="In-Person Participants" fill="#86efac" />
+                            </BarChart>
+                        </ResponsiveContainer>
+                    </div>
+                </div>
+            );
+        };
+
+        ReactDOM.render(<EventsAnalysis />, document.getElementById('root'));
+    </script>
+</body>
+</html>
