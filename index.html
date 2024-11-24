@@ -5,30 +5,66 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Internet Pipes Events Dashboard</title>
     
-    <!-- Dependencies in correct order -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/recharts/2.1.12/Recharts.js"></script>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.5/babel.min.js"></script>
-    
+    <!-- Use static CSS instead of Tailwind CDN -->
     <style>
         html, body { 
             margin: 0; 
             padding: 0; 
             height: 100%; 
-            width: 100%; 
+            width: 100%;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
         }
         #root { 
             width: 100%; 
             height: 100%; 
             padding: 20px; 
             box-sizing: border-box;
+            background: white;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        .stat-card {
+            padding: 1rem;
+            border-radius: 0.5rem;
+            background: #f0f9ff;
+        }
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+        .stat-label {
+            font-size: 0.875rem;
+            color: #4b5563;
+        }
+        .chart-container {
+            height: 400px;
+            margin-bottom: 2rem;
+        }
+        .chart-title {
+            font-size: 1.25rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+        @media (max-width: 768px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
 <body>
     <div id="root"></div>
+
+    <!-- Load dependencies in specific order -->
+    <script src="https://unpkg.com/react@17/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@17/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/prop-types@15.7.2/prop-types.min.js"></script>
+    <script src="https://unpkg.com/recharts@2.1.12/umd/Recharts.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 
     <script type="text/babel">
         const {
@@ -64,32 +100,32 @@
             }), { digital: 0, inPerson: 0, total: 0, digitalParticipants: 0, inPersonParticipants: 0 });
 
             return (
-                <div className="w-full h-full bg-white">
-                    <div className="grid grid-cols-1 md:grid-cols-5 gap-4 mb-8">
-                        <div className="p-4 bg-blue-50 rounded-lg">
-                            <div className="text-2xl font-bold">{totalStats.digital}</div>
-                            <div className="text-sm text-gray-600">Digital Events</div>
+                <div>
+                    <div className="grid">
+                        <div className="stat-card">
+                            <div className="stat-value">{totalStats.digital}</div>
+                            <div className="stat-label">Digital Events</div>
                         </div>
-                        <div className="p-4 bg-green-50 rounded-lg">
-                            <div className="text-2xl font-bold">{totalStats.inPerson}</div>
-                            <div className="text-sm text-gray-600">In-Person Events</div>
+                        <div className="stat-card">
+                            <div className="stat-value">{totalStats.inPerson}</div>
+                            <div className="stat-label">In-Person Events</div>
                         </div>
-                        <div className="p-4 bg-purple-50 rounded-lg">
-                            <div className="text-2xl font-bold">{totalStats.total}</div>
-                            <div className="text-sm text-gray-600">Total Events</div>
+                        <div className="stat-card">
+                            <div className="stat-value">{totalStats.total}</div>
+                            <div className="stat-label">Total Events</div>
                         </div>
-                        <div className="p-4 bg-blue-100 rounded-lg">
-                            <div className="text-2xl font-bold">{totalStats.digitalParticipants}</div>
-                            <div className="text-sm text-gray-600">Digital Participants</div>
+                        <div className="stat-card">
+                            <div className="stat-value">{totalStats.digitalParticipants}</div>
+                            <div className="stat-label">Digital Participants</div>
                         </div>
-                        <div className="p-4 bg-green-100 rounded-lg">
-                            <div className="text-2xl font-bold">{totalStats.inPersonParticipants}</div>
-                            <div className="text-sm text-gray-600">In-Person Participants</div>
+                        <div className="stat-card">
+                            <div className="stat-value">{totalStats.inPersonParticipants}</div>
+                            <div className="stat-label">In-Person Participants</div>
                         </div>
                     </div>
 
-                    <div className="h-96 mb-8">
-                        <h3 className="text-xl font-bold mb-4">Event Count by Month</h3>
+                    <div className="chart-container">
+                        <div className="chart-title">Event Count by Month</div>
                         <ResponsiveContainer width="100%" height="100%">
                             <BarChart data={eventData}>
                                 <CartesianGrid strokeDasharray="3 3" />
@@ -103,8 +139,8 @@
                         </ResponsiveContainer>
                     </div>
 
-                    <div className="h-96">
-                        <h3 className="text-xl font-bold mb-4">Participation by Month</h3>
+                    <div className="chart-container">
+                        <div className="chart-title">Participation by Month</div>
                         <ResponsiveContainer width="100%" height="100%">
                             <BarChart data={eventData}>
                                 <CartesianGrid strokeDasharray="3 3" />
