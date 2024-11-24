@@ -5,24 +5,41 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Internet Pipes Events Dashboard</title>
     
-    <!-- Tailwind CSS -->
+    <!-- Load dependencies with specific versions and integrity checks -->
+    <script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+    <script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+    <script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.5/babel.min.js"></script>
+    <script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/recharts/2.10.3/Recharts.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     
-    <!-- React and ReactDOM -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
-    
-    <!-- Recharts -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/recharts/2.12.0/Recharts.js"></script>
-    
-    <!-- Babel for JSX -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.5/babel.min.js"></script>
+    <style>
+        html, body { 
+            margin: 0; 
+            padding: 0; 
+            height: 100%; 
+            width: 100%; 
+        }
+        #root { 
+            width: 100%; 
+            height: 100%; 
+            padding: 20px; 
+            box-sizing: border-box;
+        }
+    </style>
 </head>
 <body>
-    <div id="root" class="min-h-screen bg-gray-50 p-8"></div>
+    <div id="root"></div>
 
     <script type="text/babel">
+        // First check if all dependencies are loaded
+        console.log('React version:', React.version);
+        console.log('Recharts:', window.Recharts);
+
         const EventsAnalysis = () => {
+            if (!window.Recharts) {
+                return <div>Loading charts library...</div>;
+            }
+
             const eventData = [
                 { month: 'Jan 2024', digital: 1, inPerson: 1, digitalParticipants: 447, inPersonParticipants: 31 },
                 { month: 'Feb 2024', digital: 6, inPerson: 4, digitalParticipants: 1406, inPersonParticipants: 65 },
@@ -48,13 +65,11 @@
                 inPersonParticipants: acc.inPersonParticipants + month.inPersonParticipants
             }), { digital: 0, inPerson: 0, total: 0, digitalParticipants: 0, inPersonParticipants: 0 });
 
-            const { BarChart, Bar, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer } = Recharts;
+            const { BarChart, Bar, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer } = window.Recharts;
 
             return (
-                <div className="max-w-7xl mx-auto bg-white rounded-lg shadow-lg p-8">
-                    <h1 className="text-3xl font-bold mb-8">Internet Pipes Events Analysis</h1>
-                    
-                    <div className="mb-8 grid grid-cols-1 md:grid-cols-5 gap-4">
+                <div className="w-full h-full bg-white">
+                    <div className="grid grid-cols-1 md:grid-cols-5 gap-4 mb-8">
                         <div className="p-4 bg-blue-50 rounded-lg">
                             <div className="text-2xl font-bold">{totalStats.digital}</div>
                             <div className="text-sm text-gray-600">Digital Events</div>
@@ -76,43 +91,50 @@
                             <div className="text-sm text-gray-600">In-Person Participants</div>
                         </div>
                     </div>
-                    
-                    <div className="mb-12">
-                        <h3 className="text-xl font-semibold mb-4">Event Count by Month</h3>
-                        <div className="h-96">
-                            <ResponsiveContainer width="100%" height="100%">
-                                <BarChart data={eventData}>
-                                    <XAxis dataKey="month" angle={-45} textAnchor="end" height={60} />
-                                    <YAxis />
-                                    <Tooltip />
-                                    <Legend />
-                                    <Bar dataKey="digital" name="Digital Events" fill="#3b82f6" />
-                                    <Bar dataKey="inPerson" name="In-Person Events" fill="#22c55e" />
-                                </BarChart>
-                            </ResponsiveContainer>
-                        </div>
+
+                    <div className="h-96 mb-8">
+                        <h3 className="text-xl font-bold mb-4">Event Count by Month</h3>
+                        <ResponsiveContainer width="100%" height="100%">
+                            <BarChart data={eventData}>
+                                <XAxis dataKey="month" angle={-45} textAnchor="end" height={60} />
+                                <YAxis />
+                                <Tooltip />
+                                <Legend />
+                                <Bar dataKey="digital" name="Digital Events" fill="#3b82f6" />
+                                <Bar dataKey="inPerson" name="In-Person Events" fill="#22c55e" />
+                            </BarChart>
+                        </ResponsiveContainer>
                     </div>
 
-                    <div>
-                        <h3 className="text-xl font-semibold mb-4">Participation by Month</h3>
-                        <div className="h-96">
-                            <ResponsiveContainer width="100%" height="100%">
-                                <BarChart data={eventData}>
-                                    <XAxis dataKey="month" angle={-45} textAnchor="end" height={60} />
-                                    <YAxis />
-                                    <Tooltip />
-                                    <Legend />
-                                    <Bar dataKey="digitalParticipants" name="Digital Participants" fill="#93c5fd" />
-                                    <Bar dataKey="inPersonParticipants" name="In-Person Participants" fill="#86efac" />
-                                </BarChart>
-                            </ResponsiveContainer>
-                        </div>
+                    <div className="h-96">
+                        <h3 className="text-xl font-bold mb-4">Participation by Month</h3>
+                        <ResponsiveContainer width="100%" height="100%">
+                            <BarChart data={eventData}>
+                                <XAxis dataKey="month" angle={-45} textAnchor="end" height={60} />
+                                <YAxis />
+                                <Tooltip />
+                                <Legend />
+                                <Bar dataKey="digitalParticipants" name="Digital Participants" fill="#93c5fd" />
+                                <Bar dataKey="inPersonParticipants" name="In-Person Participants" fill="#86efac" />
+                            </BarChart>
+                        </ResponsiveContainer>
                     </div>
                 </div>
             );
         };
 
-        ReactDOM.render(<EventsAnalysis />, document.getElementById('root'));
+        // Add error boundary
+        window.addEventListener('error', function(e) {
+            console.error('Runtime error:', e);
+        });
+
+        // Render with error handling
+        try {
+            ReactDOM.render(<EventsAnalysis />, document.getElementById('root'));
+        } catch (e) {
+            console.error('Render error:', e);
+            document.getElementById('root').innerHTML = 'Error loading dashboard. Check console for details.';
+        }
     </script>
 </body>
 </html>
